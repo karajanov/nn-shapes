@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<br />
+<br />
+<form id="form_index">
+    <fieldset>
+        <legend>Draw</legend>
+        <br />
+        <div class="form-group">
+            <div class="btn-group-toggle" role="group" aria-label="Basic example">
+                <button id="btn_guess" type="button" class="btn btn-info">Guess</button>
+                <button id="btn_clear" type="button" class="btn btn-info">Clear</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <fieldset>
+                    <input class="form-control" id="input_prediction" type="text" placeholder="Prediction" readonly="" />
+                </fieldset>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+        <br />
+        <br />
+        <div id="div_canvas" class="form-group">
+        </div>
+    </fieldset>
+</form>
+<br />
+<br />

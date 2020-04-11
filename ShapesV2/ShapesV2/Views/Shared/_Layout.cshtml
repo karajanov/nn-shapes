@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShapesV2</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Shape Predictor</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">Draw</a>
+                    </li>
+                    @*<li class="nav-item active">
+                        <a class="nav-link" href="@Url.Action("Preview", "Data")">Preview</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="@Url.Action("Training", "Data")">Training</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="@Url.Action("Generate", "Data")">Generate</a>
+                    </li>*@
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Shape Predictor
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/External/p5.js" asp-append-version="true"></script>
+    <script src="~/js/NeuralNetwork/matrix.js" asp-append-version="true"></script>
+    <script src="~/js/NeuralNetwork/neuralnetwork.js" asp-append-version="true"></script>
+    <script src="~/js/Common/sharedobjects.js" asp-append-version="true"></script>
+    <script src="~/js/Common/helperfunctions.js" asp-append-version="true"></script>
+    <script src="~/js/Common/asyncfunctions.js" asp-append-version="true"></script>
+    <script src="~/js/Pages/index.js" asp-append-version="true"></script>
+    <script src="~/js/Pages/preview.js" asp-append-version="true"></script>
+    <script src="~/js/Pages/training.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
