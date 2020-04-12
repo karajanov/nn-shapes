@@ -8,7 +8,7 @@ if ('function' === typeof (importScripts)) {
         const baseUrl = event.data;
 
         for (let i = 0; i < listOfShapes.length; ++i) {
-            getData(baseUrl + 'datasets/' + listOfShapes[i] + '2000.bin')
+            getData(baseUrl + 'datasets/' + listOfShapes[i] + '1000.bin')
                 .then(r => postMessage([new Uint8Array(r), listOfShapes[i]]))
                 .catch(err => postMessage(err));
         }

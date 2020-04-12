@@ -18,7 +18,8 @@ if (trainingForm) {
 
     crucialWorker.addEventListener('message', event => {
         let answer = event.data;
-        console.log(answer);
+        NeuralNetwork.updateGlobalNetwork('brain', answer);
+        alert('DONE');
     });
 
     trainBtn.addEventListener('click', () => {

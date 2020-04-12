@@ -53,21 +53,20 @@ if (indexForm) {
 
     guessBtn.addEventListener('click', () => {
 
-        //let drawing = get();
+        let drawing = get();
 
-        //drawing.resize(24, 16);
+        drawing.resize(28, 28);
 
-        
-        //save(drawing, 'test.jpg');
+        drawing.loadPixels();
 
-        //drawing.loadPixels();
+        image(drawing, 0, 0);
 
-        //console.log(drawing.pixels.length);
+        console.log(drawing.pixels.length);
 
-        //let pixelsArr = drawing.pixels;
+        let pixelsArr = drawing.pixels;
 
-        //worker.postMessage(pixelsArr);
-        console.log(dataArr);
+      //  worker.postMessage(pixelsArr);
+
     });
 
     function preload() {
