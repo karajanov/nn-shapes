@@ -1,18 +1,17 @@
 if ('function' === typeof (importScripts)) {
 
     importScripts
-        ('../Common/sharedobjects.js', '../NeuralNetwork/matrix.js', '../NeuralNetwork/neuralnetwork.js');
+        ('../Common/sharedobjects.js', '../Common/asyncfunctions.js');
 
-    addEventListener("message", event => {
+    addEventListener('message', event => {
 
-        let [pixelsArr, label] = event.data;
+        const baseUrl = event.data;
 
-        const filteredPixels = Array.from(pixelsArr)
-            .filter((_, i) => (i + 1) % 4 !== 0)
-            .map(v => (v == 201 || v == 191) ? (v - 1 ) : v);
+        for (let i = 0; i < listOfShapes.length; ++i) {
+            getData(baseUrl + 'datasets/' + listOfShapes[i] + '2000.bin')
+                .then(r => postMessage([new Uint8Array(r), listOfShapes[i]]))
+                .catch(err => postMessage(err));
+        }
 
-        let response = [filteredPixels, label];
-
-        postMessage(response);
     });
 }

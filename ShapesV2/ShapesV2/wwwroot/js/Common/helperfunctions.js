@@ -175,3 +175,11 @@ function printLocalStorageSizeInfo() {
     }
     console.log("Total =", (total / 1024).toFixed(2), "KB");
 }
+
+function spliceData(dataset, totalSize, outputset, offset) {
+    let convertedset = Array.from(dataset);
+    for (let i = 0; i < totalSize; i+=offset) {
+        let subset = convertedset.splice(0, offset);
+        outputset.push(subset);
+    }
+}

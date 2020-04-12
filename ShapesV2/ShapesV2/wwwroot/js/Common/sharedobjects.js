@@ -1,8 +1,8 @@
 const listOfShapes = [
-    'Triangle',
-    'Square',
-    'Circle',
-    'Hexagon'
+    'triangles',
+    'squares',
+    'circles',
+    'hexagons'
 ];
 
 const bg = {
@@ -23,7 +23,7 @@ const strokeAttributes = {
 };
 
 const nodes = {
-    i: 5250,
-    h: 1179,
-    o: 5
+    i: 784,
+    h: 72,
+    o: 4
 };

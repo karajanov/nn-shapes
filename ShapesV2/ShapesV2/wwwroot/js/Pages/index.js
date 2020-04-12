@@ -8,14 +8,14 @@ if (indexForm) {
     const guessBtn = document.getElementById('btn_guess');
     const predictionInput = document.getElementById('input_prediction');
     const worker = new Worker('./js/Workers/indexworker.js');
-
+    const dataArr = [];
   //  NeuralNetwork.createGlobalNetwork('brain', nodes.i, nodes.h, nodes.o);
   //  const predictor = NeuralNetwork.getGlobalNetwork('brain');
 
     worker.addEventListener('message', event => {
         const answer = event.data;
-
-        let total = 100;
+        dataArr.push(answer);
+   
 
         //for (let n = 0; n < total; ++n) {
         //    let img = createImage(28, 28);
@@ -67,12 +67,12 @@ if (indexForm) {
         //let pixelsArr = drawing.pixels;
 
         //worker.postMessage(pixelsArr);
-
+        console.log(dataArr);
     });
 
     function preload() {
 
-      //  worker.postMessage(getBaseUrl());
+        worker.postMessage(getBaseUrl());
 
 
     }

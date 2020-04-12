@@ -1,9 +1,9 @@
 if ('function' === typeof (importScripts)) {
 
     importScripts
-        ('../Common/sharedobjects.js', '../NeuralNetwork/matrix.js', '../NeuralNetwork/neuralnetwork.js');
+        ('../Common/sharedobjects.js', '../Common/asyncfunctions.js', '../NeuralNetwork/neuralnetwork.js');
 
-    addEventListener("message", event => {
+    addEventListener('message', event => {
 
         const baseUrl = event.data;
         //const pixelsArr = Array.from(event.data);
@@ -16,11 +16,6 @@ if ('function' === typeof (importScripts)) {
         //    const response = pixelsArr.filter((_, i) => (i + 1) % 4 !== 0);
         //    postMessage(response);
         //}
-
-        fetch(baseUrl.concat('circles1000.bin'))
-            .then(r => r.arrayBuffer())
-            .then(r => postMessage(new Uint8Array(r)))
-            .catch(err => postMessage(err));
 
         
     });
