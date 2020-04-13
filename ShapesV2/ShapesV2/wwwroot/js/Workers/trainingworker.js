@@ -7,11 +7,33 @@ if ('function' === typeof (importScripts)) {
 
         const baseUrl = event.data;
 
-        for (let i = 0; i < listOfShapes.length; ++i) {
-            getData(baseUrl + 'datasets/' + listOfShapes[i] + '1000.bin')
-                .then(r => postMessage([new Uint8Array(r), listOfShapes[i]]))
-                .catch(err => postMessage(err));
-        }
+        getData(baseUrl + 'datasets/triangles400.bin')
+            .then(r => {
+                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'triangles'];
+                postMessage(content);
+            })
+            .catch(_ => postMessage(null));
+
+        getData(baseUrl + 'datasets/squares400.bin')
+            .then(r => {
+                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'squares'];
+                postMessage(content);
+            })
+            .catch(_ => postMessage(null));
+
+        getData(baseUrl + 'datasets/circles400.bin')
+            .then(r => {
+                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'circles'];
+                postMessage(content);
+            })
+            .catch(_ => postMessage(null));
+
+        //getData(baseUrl + 'datasets/hexagons400.bin')
+        //    .then(r => {
+        //        let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'hexagons'];
+        //        postMessage(content);
+        //    })
+        //    .catch(_ => postMessage(null));
 
     });
 }

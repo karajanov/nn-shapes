@@ -193,3 +193,10 @@ function rearrange(arr) {
         arr[j] = temp;
     }
 }
+
+function postImagePixels(drawing, worker) {
+    drawing.resize(28, 28);
+    drawing.loadPixels();
+    let pixelsArr = drawing.pixels;
+    worker.postMessage(pixelsArr);
+}

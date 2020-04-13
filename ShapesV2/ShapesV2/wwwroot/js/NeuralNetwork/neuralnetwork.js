@@ -33,7 +33,7 @@ class NeuralNetwork {
 
         let tempHidden = Matrix.mult(this.weights_ih, inputValues);
         let hiddenOutputs = Matrix.add(tempHidden, this.bias_h);
-        hiddenOutputs.map(NeuralNetwork.sigmoid);
+        hiddenOutputs.applyToAllElements(NeuralNetwork.sigmoid);
 
         return hiddenOutputs;
     }
@@ -44,7 +44,7 @@ class NeuralNetwork {
 
         let tempOutput = Matrix.mult(this.weights_ho, hiddenOutputs);
         let overallOutputs = Matrix.add(tempOutput, this.bias_o);
-        overallOutputs.map(NeuralNetwork.sigmoid);
+        overallOutputs.applyToAllElements(NeuralNetwork.sigmoid);
 
         return overallOutputs;
     }
@@ -82,7 +82,7 @@ class NeuralNetwork {
     updateWeightsHiddenOutput(overallOutputs, outputErrors, hiddenOutputs) {
 
         overallOutputs
-            .map(NeuralNetwork.dsigmoid)
+            .applyToAllElements(NeuralNetwork.dsigmoid)
             .multElementWise(outputErrors)
             .mult(this.learning_rate);
 
@@ -101,7 +101,7 @@ class NeuralNetwork {
         let inputs = Matrix.toMatrix(inputArr);
 
         hiddenOutputs
-            .map(NeuralNetwork.dsigmoid)
+            .applyToAllElements(NeuralNetwork.dsigmoid)
             .multElementWise(hiddenErrors)
             .mult(this.learning_rate);
 
@@ -110,8 +110,6 @@ class NeuralNetwork {
 
         this.weights_ih = Matrix.add(this.weights_ih, deltaWeightsIh);
         this.bias_h = Matrix.add(this.bias_h, hiddenOutputs);
-
-        return this;
     }
 
     feedforward(inputArr, desiredArr) {
@@ -125,7 +123,6 @@ class NeuralNetwork {
         this
             .updateWeightsHiddenOutput(overallOutputs, overallErrors, hiddenOutputs)
             .updateWeightsInputHidden(hiddenOutputs, hiddenErrors, inputArr);
-
     }
 
     getStructuredOutput(inputArr) {
@@ -136,6 +133,27 @@ class NeuralNetwork {
         return overallOutputs.toArray();
     }
 
+    train(iterations, trainingData) {
+        let c = 0;
+        for (let i = 0; i < iterations; ++i) {
+            for (let j = 0; j < trainingData.length; ++j) {
+                let desiredArr = null;
+                switch (trainingData[j].label) {
+                    case 'triangle':
+                        desiredArr = [1, 0, 0];
+                        break;
+                    case 'square':
+                        desiredArr = [0, 1, 0];
+                        break;
+                    case 'circle':
+                        desiredArr = [0, 0, 1];
+                        break;
+                }
+                let normalizedInput = NeuralNetwork.normalize(trainingData[j], 255);
+                this.feedforward(normalizedInput, desiredArr);
+            }
+        }
+    }
 
     //the hidden and overall outputs are input into the sigmoid function
     //that maps their values in a range from 0 to 1
@@ -160,38 +178,4 @@ class NeuralNetwork {
         return inputArr.map(v => v /= n);
     }
 
-    static createGlobalNetwork(name, i, h, o) {
-        if (!localStorage.getItem(name)) {
-            let net = new NeuralNetwork(i, h, o);
-            localStorage.setItem(name, net);
-        }
-    }
-
-    static getGlobalNetwork(name) {
-        if (!localStorage.getItem(name)) {
-            return null;
-        }
-        let net = localStorage.getItem(name);
-        return NeuralNetwork.convert(net);
-    }
-
-    static updateGlobalNetwork(name, net) {
-        if (!localStorage.getItem(name)) {
-            console.error('Update: global network:', name, 'not found');
-            return undefined;
-        }
-        localStorage.setItem(name, net);
-    }
-
-    //converting a stringified Neural Network back to its original form
-    static convert(net) {
-        if (!net) {
-            console.error('Convert func: invalid parameter');
-            return undefined;
-        }
-        let temp = new NeuralNetwork(nodes.i, nodes.h, nodes.o);
-        let convertedNet = Object.assign(temp, net);
-
-        return convertedNet;
-    }
 }

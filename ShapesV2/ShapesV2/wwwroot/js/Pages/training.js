@@ -13,7 +13,13 @@ if (trainingForm) {
     const imgArr = [];
 
     trainingWorker.addEventListener('message', event => {
-        imgArr.push(event.data);
+        //imgArr.push(event.data);
+        if (event.data === null) {
+            console.log('NULL');
+        } else {
+            console.log('NOT');
+        }
+       
     });
 
     crucialWorker.addEventListener('message', event => {

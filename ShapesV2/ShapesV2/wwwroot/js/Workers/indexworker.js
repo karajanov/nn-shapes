@@ -5,8 +5,11 @@ if ('function' === typeof (importScripts)) {
 
     addEventListener('message', event => {
 
-        const baseUrl = event.data;
-        
-        
+        const pixelsArr = Array.from(event.data);
+
+        const filteredPixels = pixelsArr.filter((_, i) => i % 4 == 0);
+
+        postMessage(filteredPixels);
+
     });
 }

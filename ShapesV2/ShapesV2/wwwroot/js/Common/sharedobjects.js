@@ -1,29 +1,27 @@
 const listOfShapes = [
     'triangles',
     'squares',
-    'circles',
-    'hexagons'
+    'circles'
 ];
 
 const bg = {
-    r: 200,
-    g: 150,
-    b: 190,
-    a: 255
+    r: 0,
+    g: 0,
+    b: 0
 };
 
 const canvasRes = {
-    w: 12,
-    h: 8,
+    w: 280,
+    h: 280,
 };
 
 const strokeAttributes = {
-    colour: 0,
-    weight: 0.3
+    colour: 255,
+    weight: 8
 };
 
 const nodes = {
     i: 784,
-    h: 72,
-    o: 4
+    h: 64,
+    o: 3
 };

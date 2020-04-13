@@ -17,11 +17,6 @@ class Matrix {
 
     add(scalar) {
 
-        if (typeof scalar !== 'number') {
-            console.error('Scalar addition: parameter must be of type number');
-            return undefined;
-        }
-
         for (let i = 0; i < this.rows; ++i) {
             for (let j = 0; j < this.cols; ++j) {
                 this.matrix[i][j] += scalar;
@@ -33,11 +28,6 @@ class Matrix {
     }
 
     mult(scalar) {
-
-        if (typeof scalar !== 'number') {
-            console.error('Scalar multiplication: parameter must be of type number');
-            return undefined;
-        }
 
         for (let i = 0; i < this.rows; ++i) {
             for (let j = 0; j < this.cols; ++j) {
@@ -52,11 +42,6 @@ class Matrix {
     multElementWise(m) {
 
         //Hadamard product or element-wise matrix multiplication
-        if (!(m instanceof Matrix)) {
-            console.error('Element-wise multiplication error: parameter must be of type Matrix');
-            return undefined;
-        }
-
         for (let i = 0; i < this.rows; ++i) {
             for (let j = 0; j < this.cols; ++j) {
                 this.matrix[i][j] *= m.matrix[i][j];
@@ -81,7 +66,7 @@ class Matrix {
 
     }
 
-    map(fn) {
+    applyToAllElements(fn) {
 
         for (let i = 0; i < this.rows; ++i) {
             for (let j = 0; j < this.cols; ++j) {
@@ -110,11 +95,6 @@ class Matrix {
 
     static add(m, n) {
 
-        if (!(m instanceof Matrix) || !(n instanceof Matrix)) {
-            console.error('Addition error: both parameters must be of type Matrix');
-            return undefined;
-        }
-
         if (!Matrix.areEquivalent(m, n)) {
             console.error('Dimension error: matrices must be of the same dimension');
             return undefined;
@@ -135,11 +115,6 @@ class Matrix {
 
     static subtract(m, n) {
 
-        if (!(m instanceof Matrix) || !(n instanceof Matrix)) {
-            console.error('Subtraction error: both parameters must be of type Matrix');
-            return undefined;
-        }
-
         if (!Matrix.areEquivalent(m, n)) {
             console.error('Dimension error: matrices must be of the same dimension');
             return undefined;
@@ -158,11 +133,6 @@ class Matrix {
     }
 
     static mult(m, n) {
-
-        if (!(m instanceof Matrix) || !(n instanceof Matrix)) {
-            console.error('Product error: both matrices must be of type Matrix');
-            return undefined;
-        }
 
         if (!Matrix.areMultCompatible(m, n)) {
             console.error('Product error: the columns of A must be = to the rows of B');
@@ -201,11 +171,6 @@ class Matrix {
     }
 
     static transpose(m) {
-
-        if (!(m instanceof Matrix)) {
-            console.error('Transpose error: parameter must be of type Matrix');
-            return undefined;
-        }
 
         let t = new Matrix(m.cols, m.rows);
 

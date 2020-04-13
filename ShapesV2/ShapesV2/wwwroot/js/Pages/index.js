@@ -6,80 +6,84 @@ if (indexForm) {
     const divOfCanvas = document.getElementById('div_canvas');
     const clearBtn = document.getElementById('btn_clear');
     const guessBtn = document.getElementById('btn_guess');
+    const trainBtn = document.getElementById('btn_train');
+    const testBtn = document.getElementById('btn_test');
     const predictionInput = document.getElementById('input_prediction');
+
     const worker = new Worker('./js/Workers/indexworker.js');
+    const trainingWorker = new Worker('./js/Workers/trainingworker.js');
+    const crucialWorker = new Worker('./js/Workers/crucialworker.js');
     const dataArr = [];
-  //  NeuralNetwork.createGlobalNetwork('brain', nodes.i, nodes.h, nodes.o);
-  //  const predictor = NeuralNetwork.getGlobalNetwork('brain');
+
+    const nn = new NeuralNetwork(nodes.i, nodes.h, nodes.o);
+
+    trainingWorker.addEventListener('message', event => {
+        dataArr.push(event.data);
+    });
+
+    crucialWorker.addEventListener('message', event => {
+        const allShapes = event.data;
+        console.log(allShapes);
+        //nn.train(1, allShapes);
+        //alert('Training complete');
+    });
 
     worker.addEventListener('message', event => {
         const answer = event.data;
-        dataArr.push(answer);
-   
-
-        //for (let n = 0; n < total; ++n) {
-        //    let img = createImage(28, 28);
-        //    let offset = n * 784;
-        //    img.loadPixels();
-        //    for (let i = 0; i < 784; ++i) {
-        //        let val = 255 - answer[i + offset];
-        //        img.pixels[i * 4 + 0] = val;
-        //        img.pixels[i * 4 + 1] = val;
-        //        img.pixels[i * 4 + 2] = val;
-        //        img.pixels[i * 4 + 3] = 255;
-        //    }
-        //    img.updatePixels();
-        //    let x = (n % 10) * 28;
-        //    let y = floor(n / 10) * 28;
-        //    image(img, x, y);
-        //}
-        //if (answer === 'undetermined') {
-        //    predictionInput.value = 'Undetermined';
-        //} else {         
-        //    const normalizedInput = NeuralNetwork.normalize(answer, 255.0);
-        //    const result = predictor.getStructuredOutput(normalizedInput);
-        //    const shapeId = result.indexOf(Math.max(...result)) + 1;
-        //    console.log(result);
-        //    getShapeById(getBaseUrl().concat('api/Shape/'), shapeId)
-        //        .then(r => {
-        //            predictionInput.value = r;
-        //            console.log(r);
-        //        })
-        //        .catch(err => console.error(err));
-        //}
+        console.log(answer);
+        //const normalizedInput = NeuralNetwork.normalize(answer, 255);
+        //const result = nn.getStructuredOutput(normalizedInput);
+        //const shapeId = result.indexOf(Math.max(...result));
+        //console.log(result, listOfShapes[shapeId]);
     });
 
     clearBtn.addEventListener('click', clearCanvas);
 
+    trainBtn.addEventListener('click', () => {
+        if (dataArr.length === nodes.o) {
+            if (dataArr.includes(null)) {
+                alert('Data wasn\'t loaded successfully');
+            } else {
+                crucialWorker.postMessage(dataArr);
+            }
+        } else {
+            alert('Loading data, please wait.');
+        }  
+    });
+
     guessBtn.addEventListener('click', () => {
-
         let drawing = get();
+        postImagePixels(drawing, worker);
+    });
 
-        drawing.resize(28, 28);
+    testBtn.addEventListener('click', () => {
 
-        drawing.loadPixels();
-
-        image(drawing, 0, 0);
-
-        console.log(drawing.pixels.length);
-
-        let pixelsArr = drawing.pixels;
-
-      //  worker.postMessage(pixelsArr);
-
+        getData(getBaseUrl() + 'datasets/circles400.bin')
+            .then(r => {
+                let x = Array.from(new Uint8Array(r));
+                let counter = 0;
+                for (let i = 0; i < 100 * 784; i += 784) {
+                    let a = x.splice(0, 784);
+                    let n = NeuralNetwork.normalize(a, 255);
+                    let m = nn.getStructuredOutput(n);
+                    if (m.indexOf(Math.max(...m)) === 2) {
+                        counter++;
+                    }
+                }
+                console.log(counter);
+            })
+            .catch(e => console.error(e));
     });
 
     function preload() {
-
-        worker.postMessage(getBaseUrl());
-
-
+        trainingWorker.postMessage(getBaseUrl());
     }
+
     //p5.js - executed once when the dom content is loaded
     function setup() {
 
         //p5.js - create a canvas with specific width and height
-        const cnv = createCanvas(500, 350);
+        const cnv = createCanvas(canvasRes.w, canvasRes.h);
 
         //p5.js - set the background color of the canvas (r, g ,b)
         background(bg.r, bg.g, bg.b);
@@ -95,8 +99,8 @@ if (indexForm) {
         fill(bg.r, bg.g, bg.b);
 
         //p5.js - set the weight of the outline
-       // strokeWeight(strokeAttributes.weight);
-        strokeWeight(18.8);
+        strokeWeight(strokeAttributes.weight);
+        
     }
 
     //p5.js - continuously executes until the program is stopped or noLoop() is called

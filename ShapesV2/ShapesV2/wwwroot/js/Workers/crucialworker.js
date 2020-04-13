@@ -33,33 +33,6 @@ if ('function' === typeof (importScripts)) {
 
         let allShapes = [circles, triangles, squares, hexagons].flat();
         rearrange(allShapes);
-
-        //t, s, c, h
-        const nn = new NeuralNetwork(nodes.i, nodes.h, nodes.o);
-
-        for (let i = 0; i < 60; ++i) {
-            for (let j = 0; j < allShapes; ++j) {
-                let desiredArr = null;
-                switch (allShapes[j].label) {
-                    case 'triangle':
-                        desiredArr = [1, 0, 0, 0];
-                        break;
-                    case 'square':
-                        desiredArr = [0, 1, 0, 0];
-                        break;
-                    case 'circle':
-                        desiredArr = [0, 0, 1, 0];
-                        break;
-                    case 'hexagon':
-                        desiredArr = [0, 0, 0, 1];
-                        break;
-                }
-                let normalizedInput = NeuralNetwork.normalize(allShapes[j], 255.0);
-                nn.feedforward(normalizedInput, desiredArr);
-            }
-        }
-
-        let response = nn;
-        postMessage(response);
+        postMessage(allShapes);
     });
 }
