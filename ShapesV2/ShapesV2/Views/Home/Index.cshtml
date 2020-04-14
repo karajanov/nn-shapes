@@ -8,18 +8,24 @@
     <fieldset>
         <legend>Draw</legend>
         <br />
-        <div class="form-group">
-            <div class="btn-group-toggle" role="group" aria-label="Basic example">
-                <button id="btn_guess" type="button" class="btn btn-info">Guess</button>
-                <button id="btn_clear" type="button" class="btn btn-info">Clear</button>
-            </div>
-        </div>
         <div class="row">
-            <div class="col-lg-4"></div>
             <div class="col-lg-4">
-                <fieldset>
-                    <input class="form-control" id="input_prediction" type="text" placeholder="Prediction" readonly="" />
-                </fieldset>
+                <div class="form-group">
+                    <div class="btn-group-toggle" role="group" aria-label="Basic example">
+                        <button id="btn_guess" type="button" class="btn btn-info">Guess</button>
+                        <button id="btn_clear" type="button" class="btn btn-info">Clear</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label id="label_prediction" for="progressbar_execution">Prediction</label>
+                    <div class="progress">
+                        <div id="progressbar_execution" class="progress-bar bg-info"
+                             role="progressbar" style="width: 0%" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4"></div>
         </div>
@@ -27,26 +33,16 @@
         <br />
         <div id="div_canvas" class="form-group">
         </div>
-    </fieldset>
-    <br />
-    <br />
-    <fieldset>
-        <legend>Train the Network</legend>
+        <br />
+        <h5>Train the Network</h5>
         <br />
         <div class="form-group">
-            <label id="label_slider" for="slider_train_net">Number of iterations: 10000</label>
-            <input id="slider_train_net" type="range" min="1" max="50000" value="10000" class="custom-range">
+            <label id="label_slider" for="slider_train_net">Number of iterations: 1</label>
+            <input id="slider_train_net" type="range" min="1" max="100" value="1" class="custom-range">
             <button id="btn_train" type="button" class="btn btn-info">Train</button>
         </div>
         <br />
         <div class="form-group">
-            <label id="label_execution" for="progressbar_execution">Correct Execution %</label>
-            <div class="progress">
-                <div id="progressbar_execution" class="progress-bar bg-info"
-                     role="progressbar" style="width: 0%" aria-valuemin="0" aria-valuemax="100">
-                </div>
-            </div>
-            <br>
             <button id="btn_test" type="button" class="btn btn-info">Test</button>
         </div>
     </fieldset>

@@ -28,12 +28,5 @@ if ('function' === typeof (importScripts)) {
             })
             .catch(_ => postMessage(null));
 
-        //getData(baseUrl + 'datasets/hexagons400.bin')
-        //    .then(r => {
-        //        let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'hexagons'];
-        //        postMessage(content);
-        //    })
-        //    .catch(_ => postMessage(null));
-
     });
 }

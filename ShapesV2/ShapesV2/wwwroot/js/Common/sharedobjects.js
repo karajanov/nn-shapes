@@ -1,7 +1,7 @@
 const listOfShapes = [
-    'triangles',
-    'squares',
-    'circles'
+    'Triangle',
+    'Square',
+    'Circle'
 ];
 
 const bg = {
@@ -17,7 +17,7 @@ const canvasRes = {
 
 const strokeAttributes = {
     colour: 255,
-    weight: 8
+    weight: 10.5
 };
 
 const nodes = {

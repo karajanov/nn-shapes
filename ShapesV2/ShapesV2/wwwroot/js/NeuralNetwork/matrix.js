@@ -57,7 +57,7 @@ class Matrix {
         for (let i = 0; i < this.rows; ++i) {
             for (let j = 0; j < this.cols; ++j) {
                 //generic formula: Math.random() * (max - min) + min
-                //values between -1 and 1
+                //values between -1 and ~1
                 this.matrix[i][j] = Math.random() * 2 - 1;
             }
         }

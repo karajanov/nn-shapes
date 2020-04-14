@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ShapesV2.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ShapesV2.Controllers
 {
@@ -16,7 +9,7 @@ namespace ShapesV2.Controllers
 
         public IActionResult Index() => View();
 
-        public IActionResult Training() => View();
+        public IActionResult Preview() => View();
 
         public IActionResult Error() => View();  
     }

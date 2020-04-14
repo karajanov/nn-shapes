@@ -3,38 +3,45 @@ const indexForm = document.getElementById('form_index');
 
 if (indexForm) {
 
+    //DOM Elements
     const divOfCanvas = document.getElementById('div_canvas');
     const clearBtn = document.getElementById('btn_clear');
     const guessBtn = document.getElementById('btn_guess');
     const trainBtn = document.getElementById('btn_train');
     const testBtn = document.getElementById('btn_test');
-    const predictionInput = document.getElementById('input_prediction');
-
+    const predictionLabel = document.getElementById('label_prediction');
+    const progressBar = document.getElementById('progressbar_execution');
+    const slider = document.getElementById('slider_train_net');
+    const sliderLabel = document.getElementById('label_slider');
+    
+    //Web Workers
     const worker = new Worker('./js/Workers/indexworker.js');
     const trainingWorker = new Worker('./js/Workers/trainingworker.js');
     const crucialWorker = new Worker('./js/Workers/crucialworker.js');
-    const dataArr = [];
 
     const nn = new NeuralNetwork(nodes.i, nodes.h, nodes.o);
+    const dataArr = [];
 
+    //Event handlers
     trainingWorker.addEventListener('message', event => {
         dataArr.push(event.data);
     });
 
     crucialWorker.addEventListener('message', event => {
         const allShapes = event.data;
-        console.log(allShapes);
-        //nn.train(1, allShapes);
-        //alert('Training complete');
+        console.log(slider.value);
+        nn.train(slider.value, allShapes);
+        alert('Training complete');
     });
 
     worker.addEventListener('message', event => {
         const answer = event.data;
-        console.log(answer);
-        //const normalizedInput = NeuralNetwork.normalize(answer, 255);
-        //const result = nn.getStructuredOutput(normalizedInput);
-        //const shapeId = result.indexOf(Math.max(...result));
-        //console.log(result, listOfShapes[shapeId]);
+        const normalizedInput = NeuralNetwork.normalize(answer, 255);
+        const result = nn.getStructuredOutput(normalizedInput);
+        const shapeId = getArgMax(result);
+        setProgressBarWidth(progressBar, getMax(result), true);
+        setPredictionLabel(predictionLabel, listOfShapes[shapeId], result[shapeId] * 100);
+        console.log(result, listOfShapes[shapeId]);
     });
 
     clearBtn.addEventListener('click', clearCanvas);
@@ -75,13 +82,16 @@ if (indexForm) {
             .catch(e => console.error(e));
     });
 
+    slider.addEventListener('click', () => {
+        sliderLabel.textContent = 'Number of iterations: '.concat(slider.value);
+    });
+
     function preload() {
         trainingWorker.postMessage(getBaseUrl());
     }
 
     //p5.js - executed once when the dom content is loaded
     function setup() {
-
         //p5.js - create a canvas with specific width and height
         const cnv = createCanvas(canvasRes.w, canvasRes.h);
 
@@ -99,13 +109,11 @@ if (indexForm) {
         fill(bg.r, bg.g, bg.b);
 
         //p5.js - set the weight of the outline
-        strokeWeight(strokeAttributes.weight);
-        
+        strokeWeight(strokeAttributes.weight);   
     }
 
     //p5.js - continuously executes until the program is stopped or noLoop() is called
     function draw() {
-
         //draw on the canvas
         paint();
     }
