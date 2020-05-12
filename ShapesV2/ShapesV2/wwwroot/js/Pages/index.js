@@ -13,81 +13,83 @@ if (indexForm) {
     const progressBar = document.getElementById('progressbar_execution');
     const slider = document.getElementById('slider_train_net');
     const sliderLabel = document.getElementById('label_slider');
+    const testLabel = document.getElementById('label_test');
+    const testProgressBar = document.getElementById('progressbar_test');
     
     //Web Workers
-    const worker = new Worker('./js/Workers/indexworker.js');
-    const trainingWorker = new Worker('./js/Workers/trainingworker.js');
-    const crucialWorker = new Worker('./js/Workers/crucialworker.js');
-
+    const dataRetriever = new Worker('./js/Workers/dataretriever.js');
+    const dataSplitter = new Worker('./js/Workers/datasplitter.js');
+    const pixelFilter = new Worker('./js/Workers/pixelfilter.js');
+   
+    //Utility
+    const baseUrl = getBaseUrl();
+    const trainingDataSize = 500;
+    const testingDataSize = 1000;
+    const imgRes = 784;
     const nn = new NeuralNetwork(nodes.i, nodes.h, nodes.o);
-    const dataArr = [];
-
+    const trainingDataArr = [];
+    const testingDataArr = [];
+   
     //Event handlers
-    trainingWorker.addEventListener('message', event => {
-        dataArr.push(event.data);
+    dataRetriever.addEventListener('message', event => {
+        const retrievedData = event.data;
+        if (retrievedData != null) {
+            const arrSize = retrievedData[0].length;
+            if (arrSize === trainingDataSize * imgRes) {
+                trainingDataArr.push(retrievedData);
+            } else {
+                testingDataArr.push(retrievedData);
+            }
+        }
     });
 
-    crucialWorker.addEventListener('message', event => {
+    dataSplitter.addEventListener('message', event => {
         const allShapes = event.data;
-        console.log(slider.value);
-        nn.train(slider.value, allShapes);
-        alert('Training complete');
+        if (allShapes.length === trainingDataSize * nodes.o) {
+            nn.train(slider.value, allShapes);
+            alert('Training complete');
+        } else {
+            let testResult = nn.getTestResults(allShapes);
+            let percentageValue = testResult / (testingDataSize * nodes.o);
+            setProgressBarWidth(testProgressBar, percentageValue, true);
+            let roundedPercentage = Math.round(percentageValue * 100);
+            testLabel.textContent = 'Test Execution: ' + roundedPercentage + '%'; 
+        }
     });
 
-    worker.addEventListener('message', event => {
+    pixelFilter.addEventListener('message', event => {
         const answer = event.data;
-        const normalizedInput = NeuralNetwork.normalize(answer, 255);
-        const result = nn.getStructuredOutput(normalizedInput);
-        const shapeId = getArgMax(result);
-        setProgressBarWidth(progressBar, getMax(result), true);
-        setPredictionLabel(predictionLabel, listOfShapes[shapeId], result[shapeId] * 100);
-        console.log(result, listOfShapes[shapeId]);
+        if (answer === 'EMPTY') {
+            alert('Drawing not created');
+        } else {
+            const normalizedInput = NeuralNetwork.normalize(answer, 255);
+            const result = nn.getStructuredOutput(normalizedInput);
+            const shapeId = getArgMax(result);
+            setProgressBarWidth(progressBar, getMax(result), true);
+            setPredictionLabel(predictionLabel, listOfShapes[shapeId], result[shapeId] * 100);
+            console.log(result, listOfShapes[shapeId]);
+        }
     });
 
     clearBtn.addEventListener('click', clearCanvas);
 
-    trainBtn.addEventListener('click', () => {
-        if (dataArr.length === nodes.o) {
-            if (dataArr.includes(null)) {
-                alert('Data wasn\'t loaded successfully');
-            } else {
-                crucialWorker.postMessage(dataArr);
-            }
-        } else {
-            alert('Loading data, please wait.');
-        }  
-    });
-
     guessBtn.addEventListener('click', () => {
         let drawing = get();
-        postImagePixels(drawing, worker);
+        postImagePixels(drawing, pixelFilter);
     });
 
-    testBtn.addEventListener('click', () => {
+    trainBtn.addEventListener('click', () => postUnprocessedData(trainingDataArr, dataSplitter));
 
-        getData(getBaseUrl() + 'datasets/circles400.bin')
-            .then(r => {
-                let x = Array.from(new Uint8Array(r));
-                let counter = 0;
-                for (let i = 0; i < 100 * 784; i += 784) {
-                    let a = x.splice(0, 784);
-                    let n = NeuralNetwork.normalize(a, 255);
-                    let m = nn.getStructuredOutput(n);
-                    if (m.indexOf(Math.max(...m)) === 2) {
-                        counter++;
-                    }
-                }
-                console.log(counter);
-            })
-            .catch(e => console.error(e));
-    });
+    testBtn.addEventListener('click', () => postUnprocessedData(testingDataArr, dataSplitter));
 
     slider.addEventListener('click', () => {
         sliderLabel.textContent = 'Number of iterations: '.concat(slider.value);
     });
 
     function preload() {
-        trainingWorker.postMessage(getBaseUrl());
+        dataRetriever.postMessage([baseUrl, trainingDataSize]);
+        dataRetriever.postMessage([baseUrl, testingDataSize]);
+        testLabel.textContent = 'Test Execution: ' + testingDataSize * nodes.o + ' Samples';
     }
 
     //p5.js - executed once when the dom content is loaded

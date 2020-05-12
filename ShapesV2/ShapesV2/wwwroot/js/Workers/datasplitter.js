@@ -11,7 +11,6 @@ if ('function' === typeof (importScripts)) {
 
         let circles = [];
         let squares = [];
-        let hexagons = [];
         let triangles = [];
 
         for (let i = 0; i < dataset.length; ++i) {
@@ -25,13 +24,10 @@ if ('function' === typeof (importScripts)) {
                 case 'circles':
                     spliceData(dataset[i][0], subsetSize, circles, nodes.i, 'circle');
                     break;
-                case 'hexagons':
-                    spliceData(dataset[i][0], subsetSize, hexagons, nodes.i, 'hexagon');
-                    break;
             }
         }
 
-        let allShapes = [circles, triangles, squares, hexagons].flat();
+        let allShapes = [circles, triangles, squares].flat();
         rearrange(allShapes);
         postMessage(allShapes);
     });

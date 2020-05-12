@@ -5,25 +5,25 @@ if ('function' === typeof (importScripts)) {
 
     addEventListener('message', event => {
 
-        const baseUrl = event.data;
+        const [baseUrl, dataSize] = event.data;
 
-        getData(baseUrl + 'datasets/triangles400.bin')
+        getData(baseUrl + 'datasets/triangles' + dataSize + '.bin')
             .then(r => {
-                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'triangles'];
+                let content = (r.byteLength === 0) ? null : [new Uint8Array(r), 'triangles'];
                 postMessage(content);
             })
             .catch(_ => postMessage(null));
 
-        getData(baseUrl + 'datasets/squares400.bin')
+        getData(baseUrl + 'datasets/squares' + dataSize + '.bin')
             .then(r => {
-                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'squares'];
+                let content = (r.byteLength === 0) ? null : [new Uint8Array(r), 'squares'];
                 postMessage(content);
             })
             .catch(_ => postMessage(null));
 
-        getData(baseUrl + 'datasets/circles400.bin')
+        getData(baseUrl + 'datasets/circles' + dataSize + '.bin')
             .then(r => {
-                let content = r.byteLength === 0 ? null : [new Uint8Array(r), 'circles'];
+                let content = (r.byteLength === 0) ? null : [new Uint8Array(r), 'circles'];
                 postMessage(content);
             })
             .catch(_ => postMessage(null));

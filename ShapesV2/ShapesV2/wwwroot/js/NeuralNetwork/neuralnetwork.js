@@ -134,7 +134,6 @@ class NeuralNetwork {
     }
 
     train(iterations, trainingData) {
-        let c = 0;
         for (let i = 0; i < iterations; ++i) {
             for (let j = 0; j < trainingData.length; ++j) {
                 let desiredArr = null;
@@ -153,6 +152,20 @@ class NeuralNetwork {
                 this.feedforward(normalizedInput, desiredArr);
             }
         }
+    }
+
+    getTestResults(testingData) {
+        let counter = 0;
+        for (let i = 0; i < testingData.length; ++i) {
+            let testInput = testingData[i];
+            let normalizedInput = NeuralNetwork.normalize(testInput, 255);
+            let resultArr = this.getStructuredOutput(normalizedInput);
+            let maxArg = getArgMax(resultArr);
+            if (testInput.label === listOfShapes[maxArg].toLowerCase()) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
     //the hidden and overall outputs are input into the sigmoid function
@@ -175,7 +188,7 @@ class NeuralNetwork {
 
     static normalize(inputArr, n) {
 
-        return inputArr.map(v => v /= n);
+        return inputArr.map(v => v / n);
     }
 
 }

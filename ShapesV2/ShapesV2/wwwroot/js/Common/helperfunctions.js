@@ -114,3 +114,11 @@ function displayImages(data, imgW, imgH, perRow) {
         image(img, x, y);
     }
 }
+
+function postUnprocessedData(dataArr, worker) {
+    if (dataArr.length === nodes.o) {
+        worker.postMessage(dataArr);
+    } else {
+        alert('Data wasn\'t loaded successfully');
+    }
+}

@@ -14,7 +14,7 @@ if (previewForm) {
 
     displayDataSetBtn.addEventListener('click', () => {
 
-        let selectedShape = (displayList.value).toLowerCase().concat('400.bin');
+        let selectedShape = (displayList.value).toLowerCase().concat('500.bin');
 
         getData(baseUrl.concat('datasets/').concat(selectedShape))
             .then(r => {
@@ -25,7 +25,7 @@ if (previewForm) {
     });
 
     function setup() {
-        const cnv = createCanvas(800, 450);
+        const cnv = createCanvas(850, 500);
         background(255);
         setCanvasPosition(cnv.canvas, divOfCanvasTwo);
     }
